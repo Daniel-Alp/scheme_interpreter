@@ -1,7 +1,5 @@
 from collections import deque
 
-#TODO ERROR HANDLING
-
 type expr = list[expr] | float | str
 
 def parse(tokens: deque[str]) -> expr:
