@@ -1,8 +1,9 @@
 from collections import deque
 
+#TODO ERROR HANDLING
+
 type expr = list[expr] | float | str
 
-# TODO error handling
 def parse(tokens: deque[str]) -> expr:
     next = tokens.popleft()
     if next == '(':
@@ -20,4 +21,5 @@ def atom(token):
     except ValueError:
         return token
 
-print(parse(deque(['(', '+', '34', '(', '*', '4', '5', ')', '7', ')'])))
+if __name__ == "__main__":
+    print(parse(deque(['(', '+', '34', '(', '*', '4', '5', ')', '7', ')'])))
