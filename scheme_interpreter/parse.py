@@ -1,4 +1,6 @@
-def rep_num(token: str):
+from collections import deque
+
+def represent_num(token: str):
     try:
         float(token)
     except ValueError:
@@ -7,37 +9,27 @@ def rep_num(token: str):
 
 type expr = list[expr] | float | str
 
-def parse(tokens: list[str]) -> list[expr]:
-    next = 0
-    def parse_helper() -> expr:
-        nonlocal next
-        if next >= len(tokens):
-            print("ERROR UNTERMINATED EXPRESSION")
-            raise Exception
+def parse(tokens: deque[str]) -> expr:
+    next = tokens.popleft()
+    if next == '(':
+        expr = []
+        expr.append(parse(tokens))
+        while tokens[0] != ')':
+            expr.append(parse(tokens))
+        tokens.popleft()
+        return expr
+    elif represent_num(next):
+        return float(next)
+    else:
+        return next
 
-        token = tokens[next]
-        next += 1
-        if token == '(':
-            expr = []
-            while True:
-                expr.append(parse_helper())
-                if next >= len(tokens):
-                    print("ERROR UNTERMINATED EXPRESSION")
-                    raise Exception
-                if tokens[next] == ')':
-                    break
-            return expr
-        elif rep_num(token):
-            return float(token)
-        else:
-            return token
-    return parse_helper()
-
-print(parse(['(', '+', '34', '(', '*', '4', '5', ')', '7', ')']))
-
-
-print(parse(['1']))
+print(parse(deque(['(', '+', '34', '(', '*', '4', '5', ')', '7', ')'])))
+print(parse(deque(['1'])))
 try:
-    print(parse(['(', '+', '1', '2']))
+    print(parse(deque(['(', '+', '1'])))
 except Exception:
-    pass
+    print("Error")
+try:
+    print(parse(deque(['(', '+', '1', '(', '*', '+', ')'])))
+except Exception:
+    print("Error")
