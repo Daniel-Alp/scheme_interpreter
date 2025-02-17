@@ -3,16 +3,26 @@ from collections import deque
 type expr = list[expr] | float | str
 
 def tokenize(source: str) -> deque[str]:
-    return deque(token for token in source.replace('(', ' ( ').replace(')', ' ) ').split(' ') if token)
+    return deque(source.replace('(', ' ( ').replace(')', ' ) ').split())
+
+def match(tokens: deque[str], token) -> bool:
+    return tokens and tokens[0] == token
 
 def parse(tokens: deque[str]) -> expr:
+    if not tokens:
+        print("Unexpected EOF")
+        raise Exception
     next = tokens.popleft()
     if next == '(':
         expr = []
-        while tokens[0] != ')':
+        expr.append(parse(tokens))
+        while not match(tokens, ')'):
             expr.append(parse(tokens))
         tokens.popleft()
         return expr
+    elif next == ')':
+        print("Unexpected ')'")
+        raise Exception
     else:
         return atom(next)
 
@@ -21,6 +31,3 @@ def atom(token):
         return float(token)
     except ValueError:
         return token
-
-if __name__ == "__main__":
-    print(parse(tokenize("(+ 34 (* 4 5)(* 5 6))")))

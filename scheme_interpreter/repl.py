@@ -4,13 +4,20 @@ from parse import parse
 from parse import tokenize
 
 def run(source: str, env):
-    return interp(parse(tokenize(source)), env)
+    tokens = tokenize(source)
+    while tokens:
+        print("   ", interp(parse(tokens), env))
 
 def repl():
     env = global_env()
     while True:
-        source = input(">>> ")
-        print("   ", run(source, env))
+        try: 
+            run(input(">>> "), env)
+        except EOFError:
+            print()
+            break
+        except Exception:
+            pass
 
 if __name__ == "__main__":
     repl()
