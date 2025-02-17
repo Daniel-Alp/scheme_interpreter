@@ -16,8 +16,8 @@ def repl():
         except EOFError:
             print()
             break
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
 
 if __name__ == "__main__":
     repl()

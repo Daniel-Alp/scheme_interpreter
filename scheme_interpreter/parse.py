@@ -10,8 +10,7 @@ def match(tokens: deque[str], token) -> bool:
 
 def parse(tokens: deque[str]) -> expr:
     if not tokens:
-        print("Unexpected EOF")
-        raise Exception
+        raise Exception("Unexpected EOF")
     next = tokens.popleft()
     if next == '(':
         expr = []
@@ -21,8 +20,7 @@ def parse(tokens: deque[str]) -> expr:
         tokens.popleft()
         return expr
     elif next == ')':
-        print("Unexpected ')'")
-        raise Exception
+        raise Exception("Unexpected ')'")
     else:
         return atom(next)
 
