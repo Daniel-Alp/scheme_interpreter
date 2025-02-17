@@ -28,11 +28,12 @@ def interp(expr: expr, env: list):
         return resolve_binding(expr, env)
     match expr[0]:
         case "let":
-            for binding in expr[1]:
-                name = binding[0]
-                defn = interp(binding[1], env)
-                env.append((name, defn))
-            return interp(expr[2], env)
+            new_bindings = [(binding[0], interp(binding[1], env)) for binding in expr[1]]
+            return interp(expr[2], env + new_bindings)
+        case "define":
+            name = expr[1]
+            defn = interp(expr[2], env)
+            env.append((name, defn))
         case "lambda":     
             names = expr[1]
             body = expr[2]  
